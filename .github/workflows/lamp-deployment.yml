@@ -1,4 +1,4 @@
-name: Lamp-Deployment
+name: Lamp Deployment
 
 on:
   push:
@@ -12,16 +12,14 @@ jobs:
     name: Lint Ansible Playbook
     runs-on: ubuntu-latest
 
-  steps:
-  - name: Checkout ources
-    uses: actions/checkout@v2
-  - name: Linting
-    uses: ansible/ansible-lint-action@main
-    with:
-      targets: |
-        ansible/inventory.yml
-        ansible/playbook.yml
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v2
+    - name: Linting
+      uses: ansible/ansible-lint-action@02d6a5a1652508bbd6c5f7f2eed173b9e01c96b8
+      with:
+        targets: |
+          ansible/playbook.yml
+          ansible/inventory.yml
 
-      args: "-c ansible/.ansible-lint"
-
-  
+        args: "-c ansible/.ansible-lint"
