@@ -1,0 +1,9 @@
+---
+all:
+  children:
+    web-servers:
+      hosts:
+        3.93.153.216
+      vars:
+        ansible_user: ec2-user
+        ansible_password: toor
