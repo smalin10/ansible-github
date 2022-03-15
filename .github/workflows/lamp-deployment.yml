@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - "releases/**"
+      - "stable/**"
   pull_request:
   workflow_dispatch:
 
@@ -16,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: ansible-lint
-      uses: ansible/ansible-lint-action@ec3a7ce113134d7a93b817d10a8272cb61118579
+      uses: ansible/ansible-lint-action@v4.1.0.post0
       with:
         override-deps: |
           ansible==2.9
