@@ -13,9 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: ansible-lint
-      uses: ansible/ansible-lint-action@2442b4341cd2dfd560f9d1787453381bfa17cae3
+      uses: ansible/ansible-lint-action@ec3a7ce113134d7a93b817d10a8272cb61118579
       with:
         override-deps: |
           ansible==2.9
