@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
   steps:
-  - name: Checkout Sources
+  - name: Checkout ources
     uses: actions/checkout@v2
   - name: Linting
     uses: ansible/ansible-lint-action@main
