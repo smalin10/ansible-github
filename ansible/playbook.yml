@@ -1,10 +1,8 @@
 ---
 
 - name: Basic configuration for all servers
-  # The approach in this playbook is shared on numerous locations online, it is impossible to find the original source
-  # One source is: https://serverfault.com/questions/132970/can-i-automatically-add-a-new-host-to-known-hosts
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
   tasks:
     - name: ensure .ssh directory exists
@@ -33,7 +31,7 @@
     - name: add ssh-key to local known_hosts
       lineinfile:
         name: ~/.ssh/known_hosts
-        create: yes
+        create: true
         line: "{{ item }}"
         mode: '0600'
       when: keygen.rc == 1
@@ -43,20 +41,20 @@
   hosts: web-servers
   tasks:
   - name: Ensure Apt is up to date
-    apt: update_cache=yes
-    become: yes
+    apt: update_cache=true
+    become: true
   - name: Ensure Apache is installed
     apt: name=apache2=2.4.29* state=present
-    become: yes
+    become: true
   - name: Ensure PHP is installed
     apt: name=php7.2=7.2.24* state=present
-    become: yes
+    become: true
   - name: Ensure PHP Module for Apache is installed
     apt: name=libapache2-mod-php7.2=7.2.24* state=present
-    become: yes
+    become: true
   - name: Ensure MySql Module for Apache is installed
-    apt: name=php7.2-mysql=7.2.24* state=latest
-    become: yes
+    apt: name=php7.2-mysql=7.2.24* state=present
+    become: true
 
 - name: Deploy the application-package
   hosts: web-servers
@@ -68,9 +66,9 @@
       owner: www-data
       group: www-data
       mode: '0644'
-    become: yes
+    become: true
   - name: Ensure default HTML file does not exist
     file:
       path: /var/www/html/index.html
       state: absent
-    become: yes
+    become: true
