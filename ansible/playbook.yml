@@ -36,6 +36,7 @@
         mode: '0600'
       when: keygen.rc == 1
       with_items: '{{ keyscan.stdout_lines|default([]) }}'
+      no_log: true
 
 - name: Ensure Apache is installed with the correct modules
   hosts: ansible_nodes
