@@ -1,7 +1,7 @@
 ---
 
-- name: Basic configuration for all servers
-  hosts: all
+- name: Basic configuration for ansible_nodes servers
+  hosts: ansible_nodes
   gather_facts: false
   connection: local
   tasks:
@@ -36,35 +36,40 @@
         mode: '0600'
       when: keygen.rc == 1
       with_items: '{{ keyscan.stdout_lines|default([]) }}'
+      no_log: true
 
 - name: Ensure Apache is installed with the correct modules
-  hosts: web-servers
+  hosts: ansible_nodes
+  become: true
   tasks:
-  - name: Ensure Apt is up to date
-    apt: update_cache=true
-    become: true
+  - name: yum update
+    action: yum name=* state=latest
   - name: Ensure Apache is installed
-    apt: name=apache2=2.4.29* state=present
+    yum: name=httpd state=present
     become: true
-  - name: Ensure PHP is installed
-    apt: name=php7.2=7.2.24* state=present
-    become: true
-  - name: Ensure PHP Module for Apache is installed
-    apt: name=libapache2-mod-php7.2=7.2.24* state=present
-    become: true
+  - name: yum install epel
+    yum: name=epel-release.noarch state=latest
+  - name: download remi repo rpm
+    get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm dest=/root/  
+  - name: install remi repo rpm
+    yum: name=/root/remi-release-7.rpm state=present
+  - name: install php
+    yum: enablerepo=remi,remi-php56 name=php-mssql,php-pear,php,php-pdo,php-pecl-redis,php-xml,php-pecl-zip,php-pecl-jsonc,php-pecl-igbinary,httpd,httpd-tools,php-mbstring state=latest
+  - name: install rsync
+    yum: name=rsync state=latest
   - name: Ensure MySql Module for Apache is installed
-    apt: name=php7.2-mysql=7.2.24* state=present
-    become: true
+    package: name=mysql-community-server state=present
+    ignore_errors: true
 
 - name: Deploy the application-package
-  hosts: web-servers
+  hosts: ansible_nodes
   tasks:
   - name: Install PHP File
     copy:
       src: files/index.php
       dest: /var/www/html/index.php
-      owner: www-data
-      group: www-data
+      owner: ansible
+      group: ansible
       mode: '0644'
     become: true
   - name: Ensure default HTML file does not exist
