@@ -58,6 +58,7 @@
     yum: name=rsync state=latest
   - name: Ensure MySql Module for Apache is installed
     package: name=mysql-community-server state=present
+    ignore_errors: true
 
 - name: Deploy the application-package
   hosts: ansible_nodes
