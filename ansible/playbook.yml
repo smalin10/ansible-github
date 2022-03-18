@@ -1,7 +1,7 @@
 ---
 
-- name: Basic configuration for all servers
-  hosts: all
+- name: Basic configuration for ansible_nodes servers
+  hosts: ansible_nodes
   gather_facts: false
   connection: local
   tasks:
@@ -38,7 +38,7 @@
       with_items: '{{ keyscan.stdout_lines|default([]) }}'
 
 - name: Ensure Apache is installed with the correct modules
-  hosts: web-servers
+  hosts: ansible_nodes
   tasks:
   - name: Ensure Apt is up to date
     apt: update_cache=true
@@ -57,7 +57,7 @@
     become: true
 
 - name: Deploy the application-package
-  hosts: web-servers
+  hosts: ansible_nodes
   tasks:
   - name: Install PHP File
     copy:
